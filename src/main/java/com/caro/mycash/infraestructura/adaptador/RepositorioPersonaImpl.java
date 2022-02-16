@@ -34,4 +34,19 @@ public class RepositorioPersonaImpl implements RepositorioPersona {
         return listar().stream().anyMatch(row -> row.toString().equals(persona.toString()));
     }
 
+    @Override
+    public boolean existe(Long id) {
+        return personas.containsKey(id);
+    }
+
+    @Override
+    public void modificar(Long id, Persona persona) {
+        personas.put(id, persona);
+    }
+
+    @Override
+    public void eliminar(Long id) {
+        personas.remove(id);
+    }
+
 }

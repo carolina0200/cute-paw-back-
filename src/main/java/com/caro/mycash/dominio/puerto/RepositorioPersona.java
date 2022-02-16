@@ -10,5 +10,8 @@ public interface RepositorioPersona {
     Persona consultarPorId(Long id);
     Long guardar(Persona persona);
     boolean existe(Persona persona);
+    boolean existe(Long id);
+    void modificar(Long id, Persona persona);
+    void eliminar(Long id);
 
 }
