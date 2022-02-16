@@ -14,6 +14,7 @@ public class ServicioAplicacionModificarPersona {
     }
 
     public void ejecutar(Long id, DtoPersona dto) {
+        // Eliminar este comentario
         Persona persona = Persona.of(dto.getNombre(), dto.getApellido());
         this.servicioModificarPersona.ejecutar(id, persona);
     }
