@@ -33,6 +33,7 @@ class PersonaTest {
 
         try {
             // Act
+
             Persona.of(nombre, apellido);
             fail();
         } catch (IllegalArgumentException e) {

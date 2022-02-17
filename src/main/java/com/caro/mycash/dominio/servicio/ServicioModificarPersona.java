@@ -12,6 +12,7 @@ public class ServicioModificarPersona {
     private final RepositorioPersona repositorioPersona;
 
     public ServicioModificarPersona(RepositorioPersona repositorioPersona) {
+        // Eliminar
         this.repositorioPersona = repositorioPersona;
     }
 
