@@ -2,12 +2,10 @@ package com.caro.mycash.infraestructura.adaptador;
 
 import com.caro.mycash.dominio.modelo.Persona;
 import com.caro.mycash.dominio.puerto.RepositorioPersona;
-import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.List;
 
-@Repository
 public class RepositorioPersonaImpl implements RepositorioPersona {
 
     private long secuencia;
