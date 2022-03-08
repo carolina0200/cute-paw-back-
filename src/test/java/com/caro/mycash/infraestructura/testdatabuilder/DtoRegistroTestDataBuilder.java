@@ -23,6 +23,6 @@ public class DtoRegistroTestDataBuilder {
     }
 
     public DtoRegistro build() {
-        return new DtoRegistro(tipo, concepto, descripcion, cuanto, cuando, icono);
+        return new DtoRegistro(tipo, concepto, descripcion, cuanto, icono, cuando);
     }
 }
