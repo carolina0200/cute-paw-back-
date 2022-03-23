@@ -8,4 +8,7 @@ public interface RepositorioRegistro {
 
     Long guardar(Registro registro);
     List<Registro> listar();
+    List<Registro> obtenerPorTipo(String tipo);
+    List<Registro> obtenerPorConcepto(String concepto);
+    void eliminar(List<Registro> registros);
 }

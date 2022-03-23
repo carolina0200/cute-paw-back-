@@ -1,8 +1,11 @@
 package com.caro.mycash.infraestructura.adaptador.entidad;
 
+import lombok.Getter;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Getter
 @Entity
 @Table(name = "registro")
 public class EntidadRegistro {
@@ -28,31 +31,4 @@ public class EntidadRegistro {
         this.cuando = cuando;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getTipo() {
-        return tipo;
-    }
-
-    public String getConcepto() {
-        return concepto;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public Double getCuanto() {
-        return cuanto;
-    }
-
-    public String getIcono() {
-        return icono;
-    }
-
-    public LocalDateTime getCuando() {
-        return cuando;
-    }
 }

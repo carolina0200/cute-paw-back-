@@ -25,6 +25,24 @@ public class RepositorioRegistroMySql implements RepositorioRegistro {
     @Override
     public List<Registro> listar() {
         List<EntidadRegistro> registros = repositorio.findAll();
-        return registros.stream().map(registro -> Registro.of(registro.getTipo(), registro.getConcepto(), registro.getDescripcion(), registro.getCuanto(), registro.getCuando(), registro.getIcono())).toList();
+        return registros.stream().map(Registro::fromEntity).toList();
+    }
+
+    @Override
+    public List<Registro> obtenerPorTipo(String tipo) {
+        List<EntidadRegistro> registros = repositorio.findAllByTipo(tipo);
+        return registros.stream().map(Registro::fromEntity).toList();
+    }
+
+    @Override
+    public List<Registro> obtenerPorConcepto(String concepto) {
+        List<EntidadRegistro> registros = repositorio.findAllByConcepto(concepto);
+        return registros.stream().map(Registro::fromEntity).toList();
+    }
+
+    @Override
+    public void eliminar(List<Registro> registros) {
+        Iterable<Long> ids = registros.stream().map(Registro::getId).toList();
+        repositorio.deleteAllById(ids);
     }
 }

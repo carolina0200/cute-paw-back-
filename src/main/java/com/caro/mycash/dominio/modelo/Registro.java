@@ -1,7 +1,13 @@
 package com.caro.mycash.dominio.modelo;
 
+import com.caro.mycash.infraestructura.adaptador.entidad.EntidadRegistro;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 import java.time.LocalDateTime;
 
+@Getter
+@AllArgsConstructor
 public class Registro {
 
     private static final String MENSAJE_TIPO_OBLIGATORIO = "El tipo de registro es obligatorio";
@@ -17,57 +23,31 @@ public class Registro {
     private static final int DESCRIPCION_CARACTERES_MAXIMO = CUANTO_MAXIMO;
     private static final String MENSAJE_CUANDO_OBLIGATORIO = "La fecha en la que se hizo el ingreso o egreso es obligatoria";
 
+    private Long id;
     private String tipo;
     private String concepto;
     private String descripcion;
     private Double cuanto;
-    private String icono;
     private LocalDateTime cuando;
+    private String icono;
 
     public static Registro of(String tipo, String concepto, String descripcion, Double cuanto, LocalDateTime cuando, String icono) {
         validarObligatorio(tipo, MENSAJE_TIPO_OBLIGATORIO);
         validarTipo(tipo);
-        validarObligatorio(concepto, MENSAJE_CONCEPTO_OBLIGATORIO);
-        validarConcepto(concepto);
+        if(tipo.equals("EG")) {
+            validarObligatorio(concepto, MENSAJE_CONCEPTO_OBLIGATORIO);
+            validarConcepto(concepto);
+        }
         validarObligatorio(descripcion, MENSAJE_DESCRIPCION_OBLIGATORIA);
         validarDescripcion(descripcion);
         validarObligatorio(cuanto, MENSAJE_CUANTO_OBLIGATORIO);
         validarCuanto(cuanto);
         validarObligatorio(cuando, MENSAJE_CUANDO_OBLIGATORIO);
-        return new Registro(tipo, concepto, descripcion, cuanto, cuando, icono);
+        return new Registro(null, tipo, concepto, descripcion, cuanto, cuando, icono);
     }
 
-    private Registro(String tipo, String concepto, String descripcion, Double cuanto, LocalDateTime cuando, String icono) {
-        this.tipo = tipo;
-        this.concepto = concepto;
-        this.descripcion = descripcion;
-        this.cuanto = cuanto;
-        this.cuando = cuando;
-        this.icono = icono;
-    }
-
-    public String getTipo() {
-        return tipo;
-    }
-
-    public String getConcepto() {
-        return concepto;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public Double getCuanto() {
-        return cuanto;
-    }
-
-    public LocalDateTime getCuando() {
-        return cuando;
-    }
-
-    public String getIcono() {
-        return icono;
+    public static Registro fromEntity(EntidadRegistro entidad) {
+        return new Registro(entidad.getId(), entidad.getTipo(), entidad.getConcepto(), entidad.getDescripcion(), entidad.getCuanto(), entidad.getCuando(), entidad.getIcono());
     }
 
     private static void validarObligatorio(Object valor, String mensaje) {

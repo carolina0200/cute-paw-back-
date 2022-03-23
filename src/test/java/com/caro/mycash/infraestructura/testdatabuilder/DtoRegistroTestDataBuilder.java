@@ -22,6 +22,21 @@ public class DtoRegistroTestDataBuilder {
         this.cuando = LocalDateTime.of(2022, 3, 2, 5, 0,0);
     }
 
+    public DtoRegistroTestDataBuilder conCuanto(Double cuanto) {
+        this.cuanto = cuanto;
+        return this;
+    }
+
+    public DtoRegistroTestDataBuilder conTipo(String tipo) {
+        this.tipo = tipo;
+        return this;
+    }
+
+    public DtoRegistroTestDataBuilder conConcepto(String concepto) {
+        this.concepto = concepto;
+        return this;
+    }
+
     public DtoRegistro build() {
         return new DtoRegistro(tipo, concepto, descripcion, cuanto, icono, cuando);
     }
