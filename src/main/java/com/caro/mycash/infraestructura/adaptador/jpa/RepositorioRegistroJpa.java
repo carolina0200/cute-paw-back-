@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface RepositorioRegistroJpa extends JpaRepository<EntidadRegistro, Long> {
-    List<EntidadRegistro> findAllByTipo(String tipo);
-    List<EntidadRegistro> findAllByConcepto(String tipo);
+    List<EntidadRegistro> findAllByTipoOrderByCuandoAsc(String tipo);
+    List<EntidadRegistro> findAllByConceptoOrderByCuandoAsc(String tipo);
 }

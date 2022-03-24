@@ -11,6 +11,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static com.caro.mycash.dominio.modelo.Registro.*;
+
 @Service
 public class ServicioGenerarReporte {
 
@@ -28,8 +30,8 @@ public class ServicioGenerarReporte {
 
     @Transactional
     public Reporte ejecutar() {
-        List<Registro> ingresos = servicioObtenerRegistros.obtenerPorTipo("IN");
-        List<Registro> egresos = servicioObtenerRegistros.obtenerPorTipo("EG");
+        List<Registro> ingresos = servicioObtenerRegistros.obtenerPorTipo(TIPO_REGISTRO_INGRESO);
+        List<Registro> egresos = servicioObtenerRegistros.obtenerPorTipo(TIPO_REGISTRO_EGRESO);
         List<Registro> todas = Stream.of(ingresos, egresos).flatMap(Collection::stream).toList();
         if(todas.isEmpty()) {
             throw new IllegalStateException(NO_HAY_REGISTROS);
@@ -42,12 +44,9 @@ public class ServicioGenerarReporte {
     }
 
     private Reporte construirReport(Double ingresos, Double egresos) {
-        Reporte reporte = new Reporte();
-        reporte.setIngresos(ingresos);
-        reporte.setEgresos(egresos);
-        reporte.setObligatorios(servicioObtenerRegistros.obtenerPorConcepto("OB").stream().mapToDouble(Registro::getCuanto).sum());
-        reporte.setOtros(servicioObtenerRegistros.obtenerPorConcepto("OT").stream().mapToDouble(Registro::getCuanto).sum());
-        reporte.setHasta(LocalDate.now());
-        return  reporte;
+        return Reporte.builder().ingresos(ingresos).egresos(egresos)
+            .obligatorios(servicioObtenerRegistros.obtenerPorConcepto(CONCEPTO_REGISTRO_OBLIGATORIO).stream().mapToDouble(Registro::getCuanto).sum())
+            .otros(servicioObtenerRegistros.obtenerPorConcepto(CONCEPTO_REGISTRO_OTRO).stream().mapToDouble(Registro::getCuanto).sum())
+            .hasta(LocalDate.now()).build();
     }
 }

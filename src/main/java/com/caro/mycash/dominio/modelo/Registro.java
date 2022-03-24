@@ -23,6 +23,11 @@ public class Registro {
     private static final int DESCRIPCION_CARACTERES_MAXIMO = CUANTO_MAXIMO;
     private static final String MENSAJE_CUANDO_OBLIGATORIO = "La fecha en la que se hizo el ingreso o egreso es obligatoria";
 
+    public static final String TIPO_REGISTRO_INGRESO = "IN";
+    public static final String TIPO_REGISTRO_EGRESO = "EG";
+    public static final String CONCEPTO_REGISTRO_OBLIGATORIO = "OB";
+    public static final String CONCEPTO_REGISTRO_OTRO = "OT";
+
     private Long id;
     private String tipo;
     private String concepto;
@@ -34,7 +39,7 @@ public class Registro {
     public static Registro of(String tipo, String concepto, String descripcion, Double cuanto, LocalDateTime cuando, String icono) {
         validarObligatorio(tipo, MENSAJE_TIPO_OBLIGATORIO);
         validarTipo(tipo);
-        if(tipo.equals("EG")) {
+        if(tipo.equals(TIPO_REGISTRO_EGRESO)) {
             validarObligatorio(concepto, MENSAJE_CONCEPTO_OBLIGATORIO);
             validarConcepto(concepto);
         }
@@ -57,13 +62,13 @@ public class Registro {
     }
 
     private static void validarTipo(String tipo) {
-        if (!(tipo.equals("IN") || tipo.equals("EG"))) {
+        if (!(tipo.equals(TIPO_REGISTRO_INGRESO) || tipo.equals(TIPO_REGISTRO_EGRESO))) {
             throw new IllegalArgumentException(MENSAJE_TIPO_RESTRICCION);
         }
     }
 
     private static void validarConcepto(String concepto) {
-        if (!(concepto.equals("OT") || concepto.equals("OB"))) {
+        if (!(concepto.equals(CONCEPTO_REGISTRO_OTRO) || concepto.equals(CONCEPTO_REGISTRO_OBLIGATORIO))) {
             throw new IllegalArgumentException(MENSAJE_CONCEPTO_RESTRICCION);
         }
     }

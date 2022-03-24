@@ -30,13 +30,13 @@ public class RepositorioRegistroMySql implements RepositorioRegistro {
 
     @Override
     public List<Registro> obtenerPorTipo(String tipo) {
-        List<EntidadRegistro> registros = repositorio.findAllByTipo(tipo);
+        List<EntidadRegistro> registros = repositorio.findAllByTipoOrderByCuandoAsc(tipo);
         return registros.stream().map(Registro::fromEntity).toList();
     }
 
     @Override
     public List<Registro> obtenerPorConcepto(String concepto) {
-        List<EntidadRegistro> registros = repositorio.findAllByConcepto(concepto);
+        List<EntidadRegistro> registros = repositorio.findAllByConceptoOrderByCuandoAsc(concepto);
         return registros.stream().map(Registro::fromEntity).toList();
     }
 
