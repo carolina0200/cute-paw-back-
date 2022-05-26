@@ -5,6 +5,7 @@ import com.caro.mycash.aplicacion.dto.DtoRespuesta;
 import com.caro.mycash.aplicacion.servicio.ServicioAplicacionGuardarRegistro;
 import com.caro.mycash.aplicacion.servicio.ServicioAplicacionListarRegistros;
 import com.caro.mycash.dominio.modelo.Registro;
+import com.caro.mycash.infraestructura.aspecto.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,10 +23,12 @@ public class ControladorRegistro {
     }
 
     @GetMapping
+    @Secured(roles = {"USER"})
     public List<Registro> listar() {
         return servicioListar.ejecutar();
     }
 
     @PostMapping
+    @Secured(roles = {"USER"})
     public DtoRespuesta<Long> crear(@RequestBody DtoRegistro dto) { return servicioGuardar.ejecutar(dto); }
 }

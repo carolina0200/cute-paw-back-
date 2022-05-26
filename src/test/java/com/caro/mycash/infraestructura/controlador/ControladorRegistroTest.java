@@ -4,6 +4,7 @@ import com.caro.mycash.aplicacion.dto.DtoRegistro;
 import com.caro.mycash.aplicacion.dto.DtoRespuesta;
 import com.caro.mycash.dominio.puerto.RepositorioRegistro;
 import com.caro.mycash.infraestructura.ApplicationMock;
+import com.caro.mycash.infraestructura.testdatabuilder.DtoLoginTestDataBuilder;
 import com.caro.mycash.infraestructura.testdatabuilder.DtoRegistroTestDataBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
@@ -53,6 +54,7 @@ class ControladorRegistroTest {
     @SuppressWarnings("unchecked")
     private void crear(DtoRegistro dto) throws Exception {
         var result = mocMvc.perform(MockMvcRequestBuilders.post("/api/registros")
+                .header("Authorization", login())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk())
@@ -65,6 +67,20 @@ class ControladorRegistroTest {
         Assertions.assertNotNull(id);
     }
 
+    private String login() throws Exception {
+        var dto = new DtoLoginTestDataBuilder().build();
+        var result = mocMvc.perform(MockMvcRequestBuilders.post("/api/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        var jsonResult = result.getResponse().getContentAsString();
+        DtoRespuesta<String> respuesta = objectMapper.readValue(jsonResult, DtoRespuesta.class);
+
+        return respuesta.getValor();
+    }
+
     @Test
     @DisplayName("Debe listar los registros luego de crearlos")
     void listarTest() throws Exception {
@@ -74,9 +90,21 @@ class ControladorRegistroTest {
         crear(dto);
 
         mocMvc.perform(get("/api/registros")
+                .header("Authorization", login())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].tipo", is(dto.getTipo())))
                 .andExpect(jsonPath("$[0].cuanto", is(dto.getCuanto())));
+    }
+
+    @Test
+    @DisplayName("Debe evitar crear un registro de forma por falta de autenticación")
+    void fallaCreacionTest() throws Exception {
+        var dto = new DtoRegistroTestDataBuilder().build();
+
+        mocMvc.perform(MockMvcRequestBuilders.post("/api/registros")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isUnauthorized());
     }
 }

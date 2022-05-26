@@ -5,6 +5,7 @@ import com.caro.mycash.aplicacion.dto.DtoRespuesta;
 import com.caro.mycash.dominio.puerto.RepositorioRegistro;
 import com.caro.mycash.dominio.puerto.RepositorioReporte;
 import com.caro.mycash.infraestructura.ApplicationMock;
+import com.caro.mycash.infraestructura.testdatabuilder.DtoLoginTestDataBuilder;
 import com.caro.mycash.infraestructura.testdatabuilder.DtoRegistroTestDataBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
@@ -50,6 +51,7 @@ class ControladorReporteTest {
     @SuppressWarnings("unchecked")
     private void crearRegistro(DtoRegistro dto) throws Exception {
         var result = mocMvc.perform(MockMvcRequestBuilders.post("/api/registros")
+                .header("Authorization", login())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk())
@@ -64,9 +66,24 @@ class ControladorReporteTest {
 
     private void validarEliminacionDeRegistros() throws Exception {
         mocMvc.perform(get("/api/registros")
+                .header("Authorization", login())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isEmpty());
+    }
+
+    private String login() throws Exception {
+        var dto = new DtoLoginTestDataBuilder().build();
+        var result = mocMvc.perform(MockMvcRequestBuilders.post("/api/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dto)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        var jsonResult = result.getResponse().getContentAsString();
+        DtoRespuesta<String> respuesta = objectMapper.readValue(jsonResult, DtoRespuesta.class);
+
+        return respuesta.getValor();
     }
 
     @Test
@@ -83,6 +100,7 @@ class ControladorReporteTest {
         crearRegistro(new DtoRegistroTestDataBuilder().conCuanto(1000D).conTipo("EG").conConcepto("OT").build());
 
         mocMvc.perform(get("/api/reportes/generar")
+                .header("Authorization", login())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.ingresos", is(3000D)))
@@ -102,6 +120,7 @@ class ControladorReporteTest {
         crearRegistro(new DtoRegistroTestDataBuilder().conCuanto(1000D).conTipo("IN").conConcepto(null).build());
 
         mocMvc.perform(get("/api/reportes/generar")
+                .header("Authorization", login())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.ingresos", is(3000D)))
@@ -117,6 +136,7 @@ class ControladorReporteTest {
     void generarReporteSinRegistrosTest() throws Exception {
 
         mocMvc.perform(get("/api/reportes/generar")
+                .header("Authorization", login())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isConflict());
 
