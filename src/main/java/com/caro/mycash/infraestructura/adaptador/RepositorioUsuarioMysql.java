@@ -23,19 +23,18 @@ public class RepositorioUsuarioMysql implements RepositorioUsuario {
     public Long guardar(Usuario usuario) {
 
         List<EntidadRolUsuario> roles = usuario.getRoles().stream().map(rol -> new EntidadRolUsuario(rol.getRol())).toList();
-        EntidadUsuario entidadUsuario = new EntidadUsuario(usuario.getUsuario(), usuario.getClave(), roles);
+        EntidadUsuario entidadUsuario = new EntidadUsuario(usuario.getNombre(), usuario.getClave(), roles);
 
         return this.repositorioUsuarioJpa.save(entidadUsuario).getId();
     }
 
     @Override
     public boolean existe(Usuario usuario) {
-        return this.repositorioUsuarioJpa.findByUsuario(usuario.getUsuario()) != null;
+        return this.repositorioUsuarioJpa.findByUsuario(usuario.getNombre()) != null;
     }
 
     @Override
     public Usuario consultar(String usuario, String clave) {
-        var todo = this.repositorioUsuarioJpa.findAll();
         EntidadUsuario entidadUsuario = this.repositorioUsuarioJpa.findByUsuarioAndClave(usuario, clave);
 
         if(entidadUsuario == null) {

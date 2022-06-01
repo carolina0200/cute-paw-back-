@@ -28,7 +28,9 @@ public class AuthorizationService {
     }
 
     private String obtenerTokenActual() {
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        return request.getHeader(HttpHeaders.AUTHORIZATION);
+
+            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+            return request.getHeader(HttpHeaders.AUTHORIZATION);
+
     }
 }

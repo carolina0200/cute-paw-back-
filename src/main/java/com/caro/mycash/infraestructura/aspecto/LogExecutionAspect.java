@@ -21,7 +21,7 @@ public class LogExecutionAspect {
 
         long executionTime = System.currentTimeMillis() - start;
 
-        LOGGER.info(joinPoint.getSignature() + " executed in " + executionTime + "ms");
+        LOGGER.info(String.format("%s executed in %s ms", joinPoint.getSignature(), executionTime));
 
         return proceed;
     }
